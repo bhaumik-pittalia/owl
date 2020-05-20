@@ -162,7 +162,8 @@ class OwlController(http.Controller):
     @http.route('/balance/form', auth="user", type="json", csrf=False)
     def balance_form(self, **kw):
         print('\n\n\n\n\n\n\n000000', kw)
-        # partners = request.env['res.partner'].sudo().search([('id', '=', kw.partner_id)])
+        user = request.env['res.users'].sudo().search([('id', '=', request.session.uid)])
+        partners = request.env['res.partner'].sudo().search([('name', '=', kw.get('partner_id'))])
         # print('\n\n\n\n\n\n\n\n222222222', partners.id)
         # accounts = request.env['account.account'].sudo().search([('id', '=', kw.destination_account_id)])
         # print('\n\n\n\n\n\n\n\n55555555555555', accounts.id)
@@ -170,14 +171,21 @@ class OwlController(http.Controller):
         print('\n\n\n\n\n\n\n\n\n\n\n111111', method.id)
         joun = request.env['account.journal'].sudo().search([('name', '=', kw.get('journal_id'))])
         print('\n\n\n\n\n\n\n\n\n\n\n66666666666666', joun.id)
+        move = request.env['account.move'].sudo().create([{
+                'move_type': 'entry',
+                'journal_id': joun.id,
+                'partner_id': partners.id,
+                'company_id': user.company_id.id,
+            }])
+        print('\n\n\n\n\n\n\n\n\n\n\n\n777777', move.id)
         payment = request.env['account.payment'].sudo().create([{
+                'move_id': move.id,
                 'payment_type': kw.get('payment_type'),
                 'partner_type': kw.get('partner_type'),
                 'amount': kw.get('amount'),
                 'partner_id': kw.get('partner_id'),
                 'date': date.today(),
                 'destination_account_id': kw.get('destination_account_id'),
-                'journal_id': joun.id,
                 'payment_method_id': method.id,
                 }])
         print('\n\n\n\n\n\n\n\n\n\n4444444', payment)
