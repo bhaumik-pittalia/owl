@@ -165,7 +165,7 @@ class OwlController(http.Controller):
         user = request.env['res.users'].sudo().search([('id', '=', request.session.uid)])
         partners = request.env['res.partner'].sudo().search([('name', '=', kw.get('partner_id'))])
         # print('\n\n\n\n\n\n\n\n222222222', partners.id)
-        # accounts = request.env['account.account'].sudo().search([('id', '=', kw.destination_account_id)])
+        accounts = request.env['account.account'].sudo().search([('name', '=', kw.get('destination_account_id'))])
         # print('\n\n\n\n\n\n\n\n55555555555555', accounts.id)
         method = request.env['account.payment.method'].sudo().search([('payment_type', '=', kw.get('payment_type'))], limit=1)
         print('\n\n\n\n\n\n\n\n\n\n\n111111', method.id)
@@ -183,9 +183,9 @@ class OwlController(http.Controller):
                 'payment_type': kw.get('payment_type'),
                 'partner_type': kw.get('partner_type'),
                 'amount': kw.get('amount'),
-                'partner_id': kw.get('partner_id'),
+                'partner_id': partners.id,
                 'date': date.today(),
-                'destination_account_id': kw.get('destination_account_id'),
+                'destination_account_id': accounts.id,
                 'payment_method_id': method.id,
                 }])
         print('\n\n\n\n\n\n\n\n\n\n4444444', payment)
