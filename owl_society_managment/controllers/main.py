@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from datetime import date
+
 from odoo import http
 from odoo.http import request
 import json
@@ -26,6 +28,18 @@ class OwlController(http.Controller):
     @http.route('/event_create', type='http', auth="public", csrf=False)
     def event_register(self, **post):
         return http.request.render("owl_society_managment.event_register")
+
+    @http.route('/balance_create', type='http', auth="public", csrf=False)
+    def balance_register(self, **post):
+        return http.request.render("owl_society_managment.balance_register")
+
+    @http.route('/jounral_create', type='http', auth="public", csrf=False)
+    def jounral_register(self, **post):
+        return http.request.render("owl_society_managment.jounral_register")
+
+    @http.route('/account_create', type='http', auth="public", csrf=False)
+    def account_register(self, **post):
+        return http.request.render("owl_society_managment.account_register")
 
     @http.route('/society', auth="public", type="json", csrf=False)
     def society_register_form(self, **kw):
@@ -87,21 +101,26 @@ class OwlController(http.Controller):
     def services_form(self, **kw):
         user = request.env['res.users'].sudo().search([('id', '=', request.session.uid)])
         print('\n\n\n\n\n\n\n\n', kw)
-        file = open(kw.get('image_1920'), 'rb')
-        print('\n\n\n\n\n\n\n\n22222', file)
-        am = request.env['product.product'].sudo().create([{
+        prod = request.env['product.template'].sudo().create([{
                     'name': kw.get('name'),
                     'purchase_ok': kw.get('purchase_ok'),
                     'sale_ok': kw.get('sale_ok'),
+                    'rent_ok': kw.get('rent_ok'),
                     'type': kw.get('type'),
                     'standard_price': kw.get('standard_price'),
                     'list_price': kw.get('list_price'),
-                    'image_1920': base64.encodestring(file.read()),
                     'company_id': user.company_id.id
+                    }])
+        print('\n\n\n\n\n\n\n\n\n50000', prod.id)
+        request.env['rental.pricing'].sudo().create([{
+                    'duration': kw.get('duration'),
+                    'unit': kw.get('unit'),
+                    'price': kw.get('price'),
+                    'product_template_id': prod.id,
                     }])
         # return http.request.render("owl_society_managment.demo_template")
         # return http.local_redirect('/owl_demo')
-        return {"am": am}
+        return {"prod": prod}
 
     @http.route('/complaint/form', auth="user", type="json", csrf=False)
     def complaint_form(self, **kw):
@@ -131,3 +150,67 @@ class OwlController(http.Controller):
         # return http.request.render("owl_society_managment.demo_template")
         return http.local_redirect('/owl_demo')
         # return {"am": am}
+
+    @http.route('/get_Parnter_data', auth="user", type="json", csrf=False)
+    def get_partner(self, **post):
+        user = request.env['res.users'].sudo().search([('id', '=', request.session.uid)])
+        partners = request.env['res.partner'].sudo().search([('create_uid', '=', user.id)]).mapped('name')
+        accounts = request.env['account.account'].sudo().search([('create_uid', '=', user.id)]).mapped('name')
+        jounrals = request.env['account.journal'].sudo().search([('create_uid', '=', user.id)]).mapped('name')
+        return (partners, accounts, jounrals)
+
+    @http.route('/balance/form', auth="user", type="json", csrf=False)
+    def balance_form(self, **kw):
+        print('\n\n\n\n\n\n\n000000', kw)
+        # partners = request.env['res.partner'].sudo().search([('id', '=', kw.partner_id)])
+        # print('\n\n\n\n\n\n\n\n222222222', partners.id)
+        # accounts = request.env['account.account'].sudo().search([('id', '=', kw.destination_account_id)])
+        # print('\n\n\n\n\n\n\n\n55555555555555', accounts.id)
+        method = request.env['account.payment.method'].sudo().search([('payment_type', '=', kw.get('payment_type'))], limit=1)
+        print('\n\n\n\n\n\n\n\n\n\n\n111111', method.id)
+        joun = request.env['account.journal'].sudo().search([('name', '=', kw.get('journal_id'))])
+        print('\n\n\n\n\n\n\n\n\n\n\n66666666666666', joun.id)
+        payment = request.env['account.payment'].sudo().create([{
+                'payment_type': kw.get('payment_type'),
+                'partner_type': kw.get('partner_type'),
+                'amount': kw.get('amount'),
+                'partner_id': kw.get('partner_id'),
+                'date': date.today(),
+                'destination_account_id': kw.get('destination_account_id'),
+                'journal_id': joun.id,
+                'payment_method_id': method.id,
+                }])
+        print('\n\n\n\n\n\n\n\n\n\n4444444', payment)
+        # return http.request.render("owl_society_managment.demo_template")
+        return http.local_redirect('/owl_demo')
+
+    @http.route('/jounral/form', auth="user", type="json", csrf=False)
+    def jounral_form(self, **kw):
+        user = request.env['res.users'].sudo().search([('id', '=', request.session.uid)])
+        request.env['account.journal'].sudo().create([{
+                'name': kw.get('name'),
+                'type': kw.get('type'),
+                'code': kw.get('code'),
+                'company_id': user.company_id.id
+                }])
+        # return http.request.render("owl_society_managment.demo_template")
+        return http.local_redirect('/owl_demo')
+
+    @http.route('/get_account_data', auth="user", type="json", csrf=False)
+    def get_account_data(self, **post):
+        accounts = request.env['account.account.type'].sudo().search([]).mapped('name')
+        return accounts
+
+    @http.route('/account/form', auth="user", type="json", csrf=False)
+    def account_form(self, **kw):
+        user = request.env['res.users'].sudo().search([('id', '=', request.session.uid)])
+        accounts = request.env['account.account.type'].sudo().search([('name', '=', kw.get('user_type_id'))])
+        print('\n\n\n\n\n\n\n\n\n', accounts)
+        request.env['account.account'].sudo().create([{
+                'name': kw.get('name'),
+                'user_type_id': accounts.id,
+                'code': kw.get('code'),
+                'company_id': user.company_id.id
+                }])
+        # return http.request.render("owl_society_managment.demo_template")
+        return http.local_redirect('/owl_demo')

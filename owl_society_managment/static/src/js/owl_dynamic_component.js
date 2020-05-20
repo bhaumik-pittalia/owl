@@ -23,9 +23,11 @@ odoo.define('owl_society_managment.owl_dynamic_component', function (require) {
             list_price:"",
             recurring_invoice:"",
             subscription_template_id:"",
-            image_1920:this.fileContent,
-
-
+            // image_1920:"",
+            rent_ok:"",
+            duration:"",
+            unit:"",
+            price:"",
         });
     }
         async willStart() {
@@ -52,9 +54,13 @@ odoo.define('owl_society_managment.owl_dynamic_component', function (require) {
                     type: this.state.type ,
                     standard_price: this.state.standard_price ,
                     list_price:this.state.list_price,
-                    image_1920:this.state.image_1920,
+                    // image_1920:this.state.image_1920,
                     recurring_invoice:this.state.recurring_invoice,
                     subscription_template_id:this.state.subscription_template_id,
+                    rent_ok:this.state.rent_ok,
+                    duration:this.state.duration,
+                    unit:this.state.unit,
+                    price:this.state.price,
 
                 }});
             this.render(true);
@@ -78,6 +84,10 @@ odoo.define('owl_society_managment.owl_dynamic_component', function (require) {
                     <div>
                         <label>Sale</label>
                         <input type="checkbox" name='sale_ok' t-model="state.sale_ok"/>
+                    </div>
+                    <div>
+                        <label>Rent</label>
+                        <input type="checkbox" name='rent_ok' t-model="state.rent_ok"/>
                     </div>
                     <div>
                         <label>Type</label>
@@ -105,6 +115,23 @@ odoo.define('owl_society_managment.owl_dynamic_component', function (require) {
                                 <option t-key="subscription"><t t-esc="subscription"/></option>
                             </t>
                         </select>
+                    </div>
+                    <div>
+                        <label>Duration</label>
+                        <input type="number" name='duration' t-model="state.duration"/>
+                    </div>
+                     <div>
+                        <label>Unit</label>
+                        <select id="unit" name="unit" t-model="state.unit">
+                            <option value="hour">Hours</option>
+                            <option value="day">Days</option>
+                            <option value="week">Weeks</option>
+                            <option value="month">Months</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Price</label>
+                        <input type="number" name='price' t-model="state.price"/>
                     </div>
                     <div>
                     <input id="file-upload" type="file" accept=".gif,.jpg,.jpeg,.png" name='image_1920' t-model="state.image_1920"/>

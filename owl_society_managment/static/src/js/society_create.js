@@ -38,6 +38,7 @@ odoo.define('owl_society_managment.society_create', function (require) {
             this.member = await rpc.query({ route: "/society/form", 
                 params:{name: this.state.name,
                     email: this.state.email,
+                    currency: this.state.currency,
                 }});
             this.render(true);
           
@@ -60,7 +61,7 @@ odoo.define('owl_society_managment.society_create', function (require) {
                         <label for="Currency">Currency</label>
                         <select name="currency" t-model="state.currency" id="currency">
                             <t t-foreach="currencys" t-as="cur">
-                                <option t-key="cur"><t t-esc="cur.name"/></option>
+                                <option t-key="cur"><t t-esc="cur"/></option>
                             </t>
                         </select>
                     </div>
