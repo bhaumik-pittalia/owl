@@ -101,6 +101,8 @@ class OwlController(http.Controller):
     def services_form(self, **kw):
         user = request.env['res.users'].sudo().search([('id', '=', request.session.uid)])
         print('\n\n\n\n\n\n\n\n', kw)
+        file = open(kw.get('image_1920'), 'rb')
+        print('\n\n\n\n\n\n\n\n22222', file)
         prod = request.env['product.template'].sudo().create([{
                     'name': kw.get('name'),
                     'purchase_ok': kw.get('purchase_ok'),
@@ -109,6 +111,7 @@ class OwlController(http.Controller):
                     'type': kw.get('type'),
                     'standard_price': kw.get('standard_price'),
                     'list_price': kw.get('list_price'),
+                    'image_1920': base64.encodestring(file.read()),
                     'company_id': user.company_id.id
                     }])
         print('\n\n\n\n\n\n\n\n\n50000', prod.id)
@@ -164,9 +167,9 @@ class OwlController(http.Controller):
         print('\n\n\n\n\n\n\n000000', kw)
         user = request.env['res.users'].sudo().search([('id', '=', request.session.uid)])
         partners = request.env['res.partner'].sudo().search([('name', '=', kw.get('partner_id'))])
-        # print('\n\n\n\n\n\n\n\n222222222', partners.id)
+        print('\n\n\n\n\n\n\n\n222222222', partners.id)
         accounts = request.env['account.account'].sudo().search([('name', '=', kw.get('destination_account_id'))])
-        # print('\n\n\n\n\n\n\n\n55555555555555', accounts.id)
+        print('\n\n\n\n\n\n\n\n55555555555555', accounts.id)
         method = request.env['account.payment.method'].sudo().search([('payment_type', '=', kw.get('payment_type'))], limit=1)
         print('\n\n\n\n\n\n\n\n\n\n\n111111', method.id)
         joun = request.env['account.journal'].sudo().search([('name', '=', kw.get('journal_id'))])

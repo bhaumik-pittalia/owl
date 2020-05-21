@@ -1,0 +1,33 @@
+@charset "utf-8";
+
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700,600);
+
+* {
+  box-sizing: border-box;
+}
+.container {
+  padding: 16px;
+  background-color: white;
+}
+
+label{
+  	color: #6E70F0;
+  	 text-align: center;
+}
+
+/* Full-width input fields */
+input[type=text],input[type=checkbox],input[type=number], select, textarea {
+  width: 30%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+   text-align: center;
+  background: #DBF6F5;
+}
+
+input[type=text]:focus, input[type=checkbox]:focus,input[type=number]:focus,select, textarea {
+  background-color: #71F8F8;
+  text-align: center;
+  outline: none;
+}
