@@ -5,6 +5,7 @@
     'summary': 'Society Managment',
     'depends': ['base', 'portal', 'sale_management', 'sale_subscription', 'sale_renting', 'event', 'helpdesk'],
     'data': [
+        # 'data/ir_cron_data.xml',
         'views/templates.xml',
     ],
     'installable': True,

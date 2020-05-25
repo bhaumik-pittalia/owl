@@ -101,8 +101,8 @@ class OwlController(http.Controller):
     def services_form(self, **kw):
         user = request.env['res.users'].sudo().search([('id', '=', request.session.uid)])
         print('\n\n\n\n\n\n\n\n', kw)
-        file = open(kw.get('image_1920'), 'rb')
-        print('\n\n\n\n\n\n\n\n22222', file)
+        # file = open(kw.get('image_1920'), 'rb')base64.encodestring(file.read()),base64.encodebytes
+        # print('\n\n\n\n\n\n\n\n22222', file)
         prod = request.env['product.template'].sudo().create([{
                     'name': kw.get('name'),
                     'purchase_ok': kw.get('purchase_ok'),
@@ -111,7 +111,7 @@ class OwlController(http.Controller):
                     'type': kw.get('type'),
                     'standard_price': kw.get('standard_price'),
                     'list_price': kw.get('list_price'),
-                    'image_1920': base64.encodestring(file.read()),
+                    'image_1920': base64.encodebytes(kw.get('image_1920')),
                     'company_id': user.company_id.id
                     }])
         print('\n\n\n\n\n\n\n\n\n50000', prod.id)
@@ -140,6 +140,13 @@ class OwlController(http.Controller):
 
     @http.route('/event/form', auth="user", type="json", csrf=False)
     def event_form(self, **kw):
+        events = request.env['event.event'].sudo().search([('company_id', '=', request.session.uid)])
+
+        def deactive(self):
+            record = self.env['event.event'].sudo().search([])
+            for i in record:
+                if i.date_end < date.today():
+                    i.active = False
         user = request.env['res.users'].sudo().search([('id', '=', request.session.uid)])
         print('\n\n\n\n\n\n\n000000', kw)
         request.env['event.event'].sudo().create([{
@@ -151,7 +158,7 @@ class OwlController(http.Controller):
                 'company_id': user.company_id.id
                 }])
         # return http.request.render("owl_society_managment.demo_template")
-        return http.local_redirect('/owl_demo')
+        return events
         # return {"am": am}
 
     @http.route('/get_Parnter_data', auth="user", type="json", csrf=False)

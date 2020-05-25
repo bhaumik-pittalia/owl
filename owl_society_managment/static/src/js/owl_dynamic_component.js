@@ -5,6 +5,7 @@ odoo.define('owl_society_managment.owl_dynamic_component', function (require) {
     if (!$('.my_dynamic_component').length) {
         return Promise.reject("DOM doesn't contain '.my_dynamic_component'");
     }
+
     const rpc = require('web.rpc');
 
     const { Component, hooks, useState } = owl;
@@ -30,7 +31,9 @@ odoo.define('owl_society_managment.owl_dynamic_component', function (require) {
             price:"",
         });
     }
+
         async willStart() {
+
             this.product = await this.getProduct();
         }
 
@@ -40,13 +43,13 @@ odoo.define('owl_society_managment.owl_dynamic_component', function (require) {
             return subscriptions;
         }
         get subscriptions ()  {
-            debugger
             return this.product;
         }
         
         async _onClickLink(ev) {
-            debugger        
-            console.log(this.env.fileContent)
+            var imgdata = localStorage.getItem("imgcontent");
+            debugger
+            console.log(imgdata);
             this.product = await rpc.query({ route: "/services/form", 
                 params:{name: this.state.name , 
                     purchase_ok: this.state.purchase_ok ,
@@ -54,7 +57,7 @@ odoo.define('owl_society_managment.owl_dynamic_component', function (require) {
                     type: this.state.type ,
                     standard_price: this.state.standard_price ,
                     list_price:this.state.list_price,
-                    image_1920:this.state.image_1920,
+                    image_1920:imgdata,
                     recurring_invoice:this.state.recurring_invoice,
                     subscription_template_id:this.state.subscription_template_id,
                     rent_ok:this.state.rent_ok,
@@ -74,23 +77,34 @@ odoo.define('owl_society_managment.owl_dynamic_component', function (require) {
                 <form method="post">
                     
                     <div>
-                        <label>Product name</label>
+                        <label>Product name&#127980;</label>
+                    </div>
+                    <div>
                         <input type="text" name='name' t-model="state.name"/>
                     </div>
                     <div>
                         <label>Purchase</label>
+                    </div>
+                    <div>
                         <input type="checkbox" name='purchase_ok' t-model="state.purchase_ok"/>
                     </div>
                     <div>
                         <label>Sale</label>
+                    </div>
+                    <div>
                         <input type="checkbox" name='sale_ok' t-model="state.sale_ok"/>
                     </div>
                     <div>
                         <label>Rent</label>
+                    </div>
+                    <div>    
                         <input type="checkbox" name='rent_ok' t-model="state.rent_ok"/>
                     </div>
+                
                     <div>
                         <label>Type</label>
+                    </div>
+                    <div>                 
                         <select id="Type" name="type" t-model="state.type">
                             <option value="consu">Consumable</option>
                             <option value="service">Service</option>
@@ -106,15 +120,27 @@ odoo.define('owl_society_managment.owl_dynamic_component', function (require) {
                     </div>
                     <div>
                         <label>Subscription Product</label>
-                        <input type="checkbox" name='recurring_invoice' t-model="state.recurring_invoice"/>
+                        <input type="checkbox" id='recurring_invoice' name='recurring_invoice' t-model="state.recurring_invoice"/>    
+                        <script>
+                        document.getElementById('recurring_invoice').onchange = function () {
+                        if(("recurring_invoice")==(":checked")) {
+                            document.getElementById("subscription_template_id").disabled = true;
+                        }
+
+                        else {
+                            document.getElementById("subscription_template_id").disabled = false;
+                        }
+                    }   
+                    </script>
                     </div>
                     <div>
                         <label for="Subscription Template">Subscription Template</label>
-                        <select name="subscription_template_id" t-model="state.subscription_template_id" id="subscription_template_id">
+                        <select name="subscription_template_id" t-model="state.subscription_template_id" id="subscription_template_id" disabled="disabled">
                             <t t-foreach="subscriptions" t-as="subscription">
                                 <option t-key="subscription"><t t-esc="subscription"/></option>
                             </t>
                         </select>
+                    
                     </div>
                     <div>
                         <label>Duration</label>

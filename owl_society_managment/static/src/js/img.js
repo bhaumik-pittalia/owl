@@ -7,6 +7,7 @@ window.addEventListener("load", function() {
     var fileContent
     reader.onload = function () {
       fileContent = reader.result;
-	  console.log(fileContent);
+    localStorage.setItem("imgcontent", fileContent);
+    console.log(fileContent);
     }
 }});
