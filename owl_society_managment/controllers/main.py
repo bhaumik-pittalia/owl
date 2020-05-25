@@ -173,32 +173,37 @@ class OwlController(http.Controller):
     def balance_form(self, **kw):
         print('\n\n\n\n\n\n\n000000', kw)
         user = request.env['res.users'].sudo().search([('id', '=', request.session.uid)])
-        partners = request.env['res.partner'].sudo().search([('id', '=', kw.get('partner_id'))])
-        print('\n\n\n\n\n\n\n\n222222222', partners.id)
-        accounts = request.env['account.account'].sudo().search([('id', '=', kw.get('destination_account_id'))])
-        print('\n\n\n\n\n\n\n\n55555555555555', accounts.id)
-        method = request.env['account.payment.method'].sudo().search([('payment_type', '=', kw.get('payment_type'))], limit=1)
-        print('\n\n\n\n\n\n\n\n\n\n\n111111', method.id)
-        joun = request.env['account.journal'].sudo().search([('id', '=', kw.get('journal_id'))])
-        print('\n\n\n\n\n\n\n\n\n\n\n66666666666666', joun.id)
+        # partners = request.env['res.partner'].sudo().search([('id', '=', kw.get('partner_id'))])
+        # print('\n\n\n\n\n\n\n\n222222222', partners.id)
+        # accounts = request.env['account.account'].sudo().search([('id', '=', kw.get('destination_account_id'))])
+        # print('\n\n\n\n\n\n\n\n55555555555555', accounts.id)
+        # method = request.env['account.payment.method'].sudo().search([('payment_type', '=', kw.get('payment_type'))], limit=1)
+        # print('\n\n\n\n\n\n\n\n\n\n\n111111', method.id)
+        vals = {
+                'move_type': 'entry',
+                'journal_id': int(kw.get('journal_id')),
+                'partner_id': int(kw.get('partner_id')),
+                'company_id': user.company_id.id,
+        }
+        print('\n\n\n\n\n\n 88888888888', vals)
         move = request.env['account.move'].sudo().create([{
                 'move_type': 'entry',
-                'journal_id': joun.id,
-                'partner_id': partners.id,
+                'journal_id': int(kw.get('journal_id')),
+                'partner_id': int(kw.get('partner_id')),
                 'company_id': user.company_id.id,
             }])
         print('\n\n\n\n\n\n\n\n\n\n\n\n777777', move.id)
-        payment = request.env['account.payment'].sudo().create([{
-                'move_id': move.id,
-                'payment_type': kw.get('payment_type'),
-                'partner_type': kw.get('partner_type'),
-                'amount': kw.get('amount'),
-                'partner_id': partners.id,
-                'date': date.today(),
-                'destination_account_id': accounts.id,
-                'payment_method_id': method.id,
-                }])
-        print('\n\n\n\n\n\n\n\n\n\n4444444', payment)
+        # payment = request.env['account.payment'].sudo().create([{
+        #         'move_id': move.id,
+        #         'payment_type': kw.get('payment_type'),
+        #         'partner_type': kw.get('partner_type'),
+        #         'amount': kw.get('amount'),
+        #         'partner_id': partners.id,
+        #         'date': date.today(),
+        #         'destination_account_id': accounts.id,
+        #         'payment_method_id': method.id,
+        #         }])
+        # print('\n\n\n\n\n\n\n\n\n\n4444444', payment)
         # return http.request.render("owl_society_managment.demo_template")
         return http.local_redirect('/owl_demo')
 
