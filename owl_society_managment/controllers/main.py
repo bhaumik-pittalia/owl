@@ -43,7 +43,7 @@ class OwlController(http.Controller):
 
     @http.route('/society', auth="public", type="json", csrf=False)
     def society_register_form(self, **kw):
-        currencys = request.env['res.currency'].sudo().search([]).mapped('name')
+        currencys = request.env['res.currency'].sudo().search_read([], ['id', 'name'])
         print('\n\n\n\n\n\n 111111', currencys)
         return currencys
 
@@ -52,7 +52,7 @@ class OwlController(http.Controller):
         print('\n\n\n\n\n\n\n\n', post)
         groups_id_name = [(6, 0, [request.env.ref('base.group_portal').id])]
         currency_code = post.get('currency')
-        currency = request.env['res.currency'].sudo().search([('name', '=', currency_code)], limit=1)
+        currency = request.env['res.currency'].sudo().search([('id', '=', currency_code)], limit=1)
         partner = request.env['res.partner'].sudo().create({
             'name': post.get('name'),
             'email': post.get('email'),
@@ -93,7 +93,7 @@ class OwlController(http.Controller):
 
     @http.route('/get_Product_data', auth="user", type="json", csrf=False)
     def get_product(self, **post):
-        subscriptions = request.env['sale.subscription.template'].sudo().search([]).mapped('name')
+        subscriptions = request.env['sale.subscription.template'].sudo().search_read([], ['id', 'name'])
         print('\n\n\n\n\n\n 111111', subscriptions)
         return subscriptions
 
@@ -164,22 +164,22 @@ class OwlController(http.Controller):
     @http.route('/get_Parnter_data', auth="user", type="json", csrf=False)
     def get_partner(self, **post):
         user = request.env['res.users'].sudo().search([('id', '=', request.session.uid)])
-        partners = request.env['res.partner'].sudo().search([('create_uid', '=', user.id)]).mapped('name')
-        accounts = request.env['account.account'].sudo().search([('create_uid', '=', user.id)]).mapped('name')
-        jounrals = request.env['account.journal'].sudo().search([('create_uid', '=', user.id)]).mapped('name')
+        partners = request.env['res.partner'].sudo().search_read([('create_uid', '=', user.id)], ['id', 'name'])
+        accounts = request.env['account.account'].sudo().search_read([('create_uid', '=', user.id)], ['id', 'name'])
+        jounrals = request.env['account.journal'].sudo().search_read([('create_uid', '=', user.id)], ['id', 'name'])
         return (partners, accounts, jounrals)
 
     @http.route('/balance/form', auth="user", type="json", csrf=False)
     def balance_form(self, **kw):
         print('\n\n\n\n\n\n\n000000', kw)
         user = request.env['res.users'].sudo().search([('id', '=', request.session.uid)])
-        partners = request.env['res.partner'].sudo().search([('name', '=', kw.get('partner_id'))])
+        partners = request.env['res.partner'].sudo().search([('id', '=', kw.get('partner_id'))])
         print('\n\n\n\n\n\n\n\n222222222', partners.id)
-        accounts = request.env['account.account'].sudo().search([('name', '=', kw.get('destination_account_id'))])
+        accounts = request.env['account.account'].sudo().search([('id', '=', kw.get('destination_account_id'))])
         print('\n\n\n\n\n\n\n\n55555555555555', accounts.id)
         method = request.env['account.payment.method'].sudo().search([('payment_type', '=', kw.get('payment_type'))], limit=1)
         print('\n\n\n\n\n\n\n\n\n\n\n111111', method.id)
-        joun = request.env['account.journal'].sudo().search([('name', '=', kw.get('journal_id'))])
+        joun = request.env['account.journal'].sudo().search([('id', '=', kw.get('journal_id'))])
         print('\n\n\n\n\n\n\n\n\n\n\n66666666666666', joun.id)
         move = request.env['account.move'].sudo().create([{
                 'move_type': 'entry',

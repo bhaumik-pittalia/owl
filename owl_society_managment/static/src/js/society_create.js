@@ -61,7 +61,7 @@ odoo.define('owl_society_managment.society_create', function (require) {
                         <label for="Currency">Currency</label>
                         <select name="currency" t-model="state.currency" id="currency">
                             <t t-foreach="currencys" t-as="cur">
-                                <option t-key="cur"><t t-esc="cur"/></option>
+                                <option t-key="cur" t-attf-value="{{cur.id}}"><t t-esc="cur.name"/></option>
                             </t>
                         </select>
                     </div>

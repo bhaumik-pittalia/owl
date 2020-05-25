@@ -137,7 +137,7 @@ odoo.define('owl_society_managment.owl_dynamic_component', function (require) {
                         <label for="Subscription Template">Subscription Template</label>
                         <select name="subscription_template_id" t-model="state.subscription_template_id" id="subscription_template_id" disabled="disabled">
                             <t t-foreach="subscriptions" t-as="subscription">
-                                <option t-key="subscription"><t t-esc="subscription"/></option>
+                                <option t-key="subscription" t-attf-value="{{subscription.id}}""><t t-esc="subscription.name"/></option>
                             </t>
                         </select>
                     

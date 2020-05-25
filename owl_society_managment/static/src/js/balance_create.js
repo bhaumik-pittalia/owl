@@ -29,6 +29,7 @@ odoo.define('owl_society_managment.balance_create', function (require) {
 
         async getPartner () {
             const partners = await rpc.query({route: "/get_Parnter_data"});
+            console.log(partners[2])
             return partners;
         }
 
@@ -78,7 +79,7 @@ odoo.define('owl_society_managment.balance_create', function (require) {
                         <label>Customer/Vendor</label>
                         <select name="partner_id" t-model="state.partner_id" id="partner_id">
                             <t t-foreach="partners[0]" t-as="part">
-                                <option t-key="part"><t t-esc="part"/></option>
+                                <option t-key="part" t-attf-value="{{part.id}}"><t t-esc="part.name"/></option>
                             </t>
                         </select>
                     </div>
@@ -86,7 +87,7 @@ odoo.define('owl_society_managment.balance_create', function (require) {
                         <label>Destination Account</label>
                         <select name="destination_account_id" t-model="state.destination_account_id" id="destination_account_id">
                             <t t-foreach="partners[1]" t-as="account">
-                                <option t-key="account"><t t-esc="account"/></option>
+                                <option t-key="account" t-attf-value="{{account.id}}"><t t-esc="account.name"/></option>
                             </t>
                         </select>
                     </div>
@@ -94,7 +95,7 @@ odoo.define('owl_society_managment.balance_create', function (require) {
                         <label>Jounral</label>
                         <select name="journal_id" t-model="state.journal_id" id="journal_id">
                             <t t-foreach="partners[2]" t-as="jounral">
-                                <option t-key="jounral"><t t-esc="jounral"/></option>
+                                <option t-key="jounral" t-attf-value="{{jounral.id}}"><t t-esc="jounral.name"/></option>
                             </t>
                         </select>
                     </div>
