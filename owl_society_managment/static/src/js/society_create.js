@@ -40,24 +40,26 @@ odoo.define('owl_society_managment.society_create', function (require) {
                     email: this.state.email,
                     currency: this.state.currency,
                 }});
-            this.render(true);
+            window.location.href = "/web/login"
+            // this.render(true);
           
         }
 
 
         static template = xml`<div>
-        <div>
-            <div>
-                <form method="post">
-                    <div>
+            <div class="container py-5">
+                <div class="card border-0 mx-auto bg-100 rounded-0 shadow-sm bg-white o_database_list w-50 p-3">
+                    <div class="card-body">
+                    <form method="post">
+                    <div class="form-group">
                         <label>Name</label>
                         <input type="text" name='name' t-model="state.name"/>
                     </div>
-                    <div>
+                    <div    class="form-group">
                         <label>Email</label>
                         <input type="email" name='name' t-model="state.email"/>
                     </div>
-                    <div>
+                    <div class="form-group">
                         <label for="Currency">Currency</label>
                         <select name="currency" t-model="state.currency" id="currency">
                             <t t-foreach="currencys" t-as="cur">
@@ -65,8 +67,9 @@ odoo.define('owl_society_managment.society_create', function (require) {
                             </t>
                         </select>
                     </div>
-                <a t-on-click="_onClickLink">Submit</a>
+                <a class="btn btn-primary" t-on-click="_onClickLink">Submit</a>
                 </form>
+            </div>
             </div>
         </div>
         </div>
