@@ -44,11 +44,16 @@ odoo.define('owl_society_managment.event_create', function (require) {
           
         }
 
+        async _onClickDelete(ev) {
+            debugger
+            let event_id = ev.currentTarget.getAttribute('events_id');
+            return rpc.query({route: "/member/unlink", params: {'event_id' : event_id}})
+        }
 
         static template = xml`<div>
-        <div>
+        <div class="container py-5">
             <t t-if="events[1] == 'secretary'">
-            <div>
+            <div class="card-body">
                 <form method="post">
                     <div class="form-group">
                         <label>Event name</label>
@@ -78,6 +83,9 @@ odoo.define('owl_society_managment.event_create', function (require) {
                             <p class="card-text"> Start Date:<t t-esc='event.date_begin'/></p>
                             <p class="card-text">End Date:<t t-esc='event.date_end'/></p>
                             <p class="card-text">Details:<t t-esc='event.note'/></p>
+                            
+                            <button type="button" t-att-events_id='events.id' t-on-click="_onClickDelete" class="btn btn-danger">Delete</button>
+                        
                         </div>
                     </div>
                 </t>

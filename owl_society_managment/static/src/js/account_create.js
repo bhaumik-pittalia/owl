@@ -46,8 +46,8 @@ odoo.define('owl_society_managment.account_create', function (require) {
 
 
         static template = xml`<div>
-        <div>
-            <div>
+        <div class="container py-5">
+            <div class="card-body">
                 <form method="post">
                     <div class="form-group">
                         <label>Name</label>

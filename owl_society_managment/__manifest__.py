@@ -10,6 +10,7 @@
         'views/templates.xml',
         'views/society_managment_view.xml',
     ],
+    'demo': ['demo/demo.xml'],
     'installable': True,
     'application': True,
 }

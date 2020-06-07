@@ -3,7 +3,6 @@ odoo.define('owl_society_managment.complaint_create', function (require) {
 
     debugger
     const rpc = require('web.rpc');
-    // const member = require('owl_society_managment.my_member_create_component');
     const { Component, hooks, useState } = owl;
     const { xml } = owl.tags;
     const { whenReady } = owl.utils;
@@ -36,20 +35,16 @@ odoo.define('owl_society_managment.complaint_create', function (require) {
             this.render(true);
           
         }
+        async _onClickDelete(ev) {
+            debugger
+            let complaint_id = ev.currentTarget.getAttribute('complaint_id');
+            return rpc.query({route: "/member/unlink", params: {'complaint_id' : complaint_id}})
+        }
 
-        // AddMemberForm(ev) {
-        //     if (ev.target.dataset.mode == 'showAddMemberForm') {
-        //         const OwlMemberCreateInstance = new OwlMemberCreate();
-        //         OwlMemberCreateInstance.mount($('.my_member_create_component')[0]);
-        //         this.destroy();
-        //     } else {
-        //         this.render(true);
-        //     }
-        // }
 
         static template = xml`<div>
         <div>
-            <div>
+            <div class="container py-5">
             <div class="card-body">
             <t t-if="complaints[1] == 'member'">
             <div>
@@ -69,7 +64,9 @@ odoo.define('owl_society_managment.complaint_create', function (require) {
                                   <th scope="col">Complaint</th>
                                   <th scope="col">Member Name</th>
                                   <th scope="col">Stage</th>
+                                  <t t-if="complaints[1] == 'secretary'">
                                   <th scope="col">Action</th>
+                                  </t>
                                 </tr>
                             </thead>  
                             <t t-foreach="complaints[0]" t-as="complaint">
@@ -80,10 +77,10 @@ odoo.define('owl_society_managment.complaint_create', function (require) {
                                     
                                     <td>
                                         <t t-if="complaint.stage_id[1] == 'New'">
-                                            <a class="btn btn-primary" t-on-click="_onClickLink">In Progress</a>
+                                            <a class="btn btn-primary" t-att-complaint_id='complaint.id' t-on-click="_onClickDelete">In Progress</a>
                                         </t>
                                         <t t-if="complaint.stage_id[1] == 'In Progress'">
-                                            <a class="btn btn-primary" t-on-click="_onClickLink">solved</a>
+                                            <a class="btn btn-primary" t-att-complaint_id='complaint.id' t-on-click="_onClickDelete">solved</a>
                                         </t>
                                     </td>
                                     
@@ -99,13 +96,5 @@ odoo.define('owl_society_managment.complaint_create', function (require) {
     }
     
 
-    // function setup() {
-    //     const OwlComplaintCreateInstance = new OwlComplaintCreate();
-    //     OwlComplaintCreateInstance.mount($('.my_complaint_create_component')[0]);
-    // }
-    // // if ($('.my_complaint_create_component').length) {
-    // whenReady(setup);
-    // }
-    // return {OwlComplaintCreate :OwlComplaintCreate, OwlMemberCreate : OwlMemberCreate};
     return OwlComplaintCreate
 });

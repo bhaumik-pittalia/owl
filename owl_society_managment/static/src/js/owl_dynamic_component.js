@@ -72,8 +72,8 @@ odoo.define('owl_society_managment.owl_dynamic_component', function (require) {
 
         static template = xml`<div>
         <div class="container py-5">
-            <div class="card border-0 mx-auto bg-100 rounded-0 shadow-sm bg-white o_database_list w-50 p-3">
-                <div class="card-body">
+            <div class="card-body">
+                <div>
                     <form method="post">
                         <div class="form-group">
                             <label>Product name</label>
@@ -81,17 +81,9 @@ odoo.define('owl_society_managment.owl_dynamic_component', function (require) {
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <div class="form-check form-check-inline">
-                                    <label class="form-check-label" for="purchase">Purchase</label>
-                                    <input type="checkbox" name='purchase_ok' t-model="state.purchase_ok" class="form-check-input"/>
-                                </div>
                             <div class="form-check form-check-inline">
                                 <label class="form-check-label" for="sale">Sale</label>
                                 <input type="checkbox" name='sale_ok' t-model="state.sale_ok" class="form-check-input"/>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <label class="form-check-label" for="rent">Rent</label>   
-                                <input type="checkbox" name='rent_ok' t-model="state.rent_ok" class="form-check-input"/>
                             </div>
                             <div class="form-group">
                                 <label>Type</label>                
@@ -135,29 +127,6 @@ odoo.define('owl_society_managment.owl_dynamic_component', function (require) {
                                 </t>
                             </select>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-5">
-                                <label>Duration</label>
-                                <input type="number" name='duration' t-model="state.duration" class="form-control"/>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label>Unit</label>
-                                <select id="unit" name="unit" t-model="state.unit" class="form-control">
-                                    <option value="hour">Hours</option>
-                                    <option value="day">Days</option>
-                                    <option value="week">Weeks</option>
-                                    <option value="month">Months</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label>Price</label>
-                                <input type="number" name='price' t-model="state.price" class="form-control"/>
-                            </div>
-                        </div>
-                    <div class="form-group">
-                        <input id="file-upload" type="file" accept=".gif,.jpg,.jpeg,.png" name='image_1920' t-model="state.image_1920"/>
-                        <script type="text/javascript" src="/owl_society_managment/static/src/js/img.js" class="form-control-file"/>
-                    </div>
                     <a class="btn btn-primary" t-on-click="_onClickLink">Submit</a>
                 </form>
             </div>

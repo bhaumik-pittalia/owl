@@ -18,6 +18,8 @@ odoo.define('owl_society_managment.menu', function (require) {
     const dashboard = require('owl_society_managment.orders_detail');
     const account = require('owl_society_managment.account_create');
     const service = require('owl_society_managment.owl_dynamic_component');
+    const history = require('owl_society_managment.account_payment');
+    const sheet = require('owl_society_managment.account');
     const { Component } = owl;
     const { xml } = owl.tags;
     const { whenReady } = owl.utils;
@@ -57,10 +59,7 @@ odoo.define('owl_society_managment.menu', function (require) {
         }
 
          _renderMenuItem(mode) {
-                if (mode === 'addmember') {
-                    const memberInstance = new member();
-                    memberInstance.mount($('.component_view')[0]);
-                } else if (mode === 'addMembers') {
+                if (mode === 'addMembers') {
                     const eventInstance = new members();
                     eventInstance.mount($('.component_view')[0]);
                 } 
@@ -85,6 +84,12 @@ odoo.define('owl_society_managment.menu', function (require) {
                 }  else if (mode === 'addDashboard') {
                     const dashboardInstance = new dashboard();
                     dashboardInstance.mount($('.component_view')[0]);
+                }  else if (mode === 'history') {
+                    const accountInstance = new history();
+                    accountInstance.mount($('.component_view')[0]);
+                } else if (mode === 'sheet') {
+                    const sheetInstance = new sheet();
+                    sheetInstance.mount($('.component_view')[0]);
                 }  
                 
             }
@@ -108,10 +113,7 @@ odoo.define('owl_society_managment.menu', function (require) {
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav" t-on-click="_onClickMenuItem">
                         <li class="nav-item">
-                            <a class="nav-link" href="#" data-mode="addMember">Member</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#" data-mode="addMembers">Members</a>
+                            <a class="nav-link" href="#" data-mode="addMembers">Members</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#" data-mode="addEvent">Event</a>
@@ -120,20 +122,20 @@ odoo.define('owl_society_managment.menu', function (require) {
                             <a class="nav-link" href="#" data-mode="addComplaint">Complaint</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" data-mode="addDashboard">Dashboard</a>
+                            <a class="nav-link active" href="#" data-mode="addDashboard">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-mode="history">Payments History</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-mode="addBalance">Balance</a>
                         </li>
                         <t t-if="events[1] == 'secretary' || events[1] == 'treasurer'">
                             <li class="nav-item">
-                                <a class="nav-link" href="#" data-mode="addAccount">Account</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-mode="addJounral">Jounral</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-mode="addBalance">Balance</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link" href="#" data-mode="addService">Service</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-mode="sheet">Balance Sheet</a>
                             </li>
                         </t>
                     </ul>

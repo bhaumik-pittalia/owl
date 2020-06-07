@@ -18,6 +18,7 @@ odoo.define('owl_society_managment.member_create', function (require) {
             name: "",
             email:"",
             member_type:"",
+            street2:"",
         });
     }
 
@@ -40,15 +41,23 @@ odoo.define('owl_society_managment.member_create', function (require) {
                 params:{name: this.state.name,
                     email: this.state.email,
                     member_type: this.state.member_type,
+                    street2: this.state.street2,
                 }});
             this.render(true);
           
         }
 
+        async _onClickDelete(ev) {
+            debugger
+            let partner_id = ev.currentTarget.getAttribute('members_id');
+            return rpc.query({route: "/member/unlink", params: {'partner_id' : partner_id}})
+        }
+
+
         static template = xml`<div>
-        <div>
+        <div class="container py-5">
             <t t-if="members[1] == 'secretary'">
-            <div>
+            <div class="card-body">
                 <form method="post">
                     <div class="form-group">
                         <label>Member name</label>
@@ -57,6 +66,10 @@ odoo.define('owl_society_managment.member_create', function (require) {
                     <div class="form-group">
                         <label>Email</label>
                         <input type="email" name='name' t-model="state.email" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label>House Number</label>
+                        <input type="text" name='street2' t-model="state.street2" class="form-control"/>
                     </div>
                     <div class="form-group">
                         <label>Type</label>                
@@ -78,6 +91,9 @@ odoo.define('owl_society_managment.member_create', function (require) {
                                   <th scope="col">Name</th>
                                   <th scope="col">Email</th>
                                   <th scope="col">Member Type</th>
+                                  <t t-if="members[1] == 'secretary'">
+                                  <th scope="col">Action</th>
+                                  </t>
                                 </tr>
                             </thead>  
                             <t t-foreach="members[0]" t-as="member">
@@ -85,8 +101,11 @@ odoo.define('owl_society_managment.member_create', function (require) {
                                     <td><t t-esc="member.name"/></td>
                                     <td><t t-esc="member.email"/></td>
                                     <td><t t-esc="member.member_type"/></td>
-                                </tr>
-                            </t>
+                          
+                                    <button type="button" class="btn btn-danger" t-att-members_id='members.id' t-on-click="_onClickDelete">Delete</button>
+                                    </tr>
+                                </t>
+                                
                         </table>
                    </div>
                 </div>

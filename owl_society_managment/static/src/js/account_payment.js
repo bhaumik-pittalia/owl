@@ -1,10 +1,10 @@
-odoo.define('owl_society_managment.orders_detail', function (require) {
+odoo.define('owl_society_managment.account_payment', function (require) {
     "use strict";
 
     // require('web.dom_ready');
-    // if (!$('.orders_details').length) {
-    //     return Promise.reject("DOM doesn't contain '.orders_details'");
-    // }
+    // if (!$('.account_payment').length) {
+    //     return Promise.reject("DOM doesn't contain '.account_payment'");
+    // }   
 
     const rpc = require('web.rpc');
 
@@ -20,7 +20,7 @@ odoo.define('owl_society_managment.orders_detail', function (require) {
         }
 
         async getdetails (order_id) {
-            const details = await rpc.query({route: "/order_detail", params: {order_id: order_id}});
+            const details = await rpc.query({route: "/order_details", params: {order_id: order_id}});
             return details;
 
         }
@@ -43,11 +43,10 @@ odoo.define('owl_society_managment.orders_detail', function (require) {
                         <h4><span t-esc="order.name"/><span class="pull-right fa fa-arrow-left" t-on-click="modelFunction()"/></h4>
                     </div>
                     <div class="card-body">
-                        <h5>Order Date : <span t-esc="order.date_order"/></h5>
+                        <h5>Date : <span t-esc="order.date"/></h5>
                         <t t-foreach="details.partner" t-as="partner" t-key="id">
-                            <h5>Member Details : </h5>
+                            <h5>Name : </h5>
                             <h6> <span t-esc="partner.name" /> , </h6>
-                            <h6> <span t-esc="partner.street2" /> , </h6>
                             <h6> <span t-esc="partner.street" /> , </h6>
                             <h6><span t-esc="partner.city"/> - <span t-esc="partner.zip"/></h6>
                             <br/><br/>
@@ -55,25 +54,20 @@ odoo.define('owl_society_managment.orders_detail', function (require) {
                 <br/><br/>
                 <h4>Price :</h4>
                     <table class="table table-striped  table-hover">
-                    <thead class="thead-dark">
+                    <thead class="bg-primary">
                         <th>Name</th>
-                        <th>Quantity</th>
-                        <th>Unit Price</th>
                         <th>Taxes</th>
                         <th>Amount</th>
                     </thead>
                     <t t-set="summ" t-value="0.0"/>
                     
-                        <t t-foreach="details.details" t-as="d">
+                        <t t-foreach="details.order" t-as="d">
                             
                             <tr class="value">
                                 <td><span t-esc="d.name" /></td>
-                                
-                                <td><span t-esc="d.product_uom_qty" /></td>
-                                <td><span t-esc="d.price_unit" /></td>
-                                <td class="sum"><span t-esc="d.price_tax" /></td>
-                                <td class="sum"><span t-esc="d.price_total" /></td>
-                                <t t-set="summ" t-value="summ + d.price_total + d.price_tax" />
+                                <td class="sum"><span t-esc="d.amount_tax" /></td>
+                                <td class="sum"><span t-esc="d.amount_total" /></td>
+                                <t t-set="summ" t-value="summ + d.amount_total + d.amount_tax" />
                             </tr>
                     </t>
                     <tr>
@@ -92,11 +86,12 @@ odoo.define('owl_society_managment.orders_detail', function (require) {
 
     
         async willStart() {
+            debugger
             this.Listdata = await this.getOrderList();
         }
 
         async getOrderList () {
-            var orderList = await rpc.query({route: "/get_order_details"}); 
+            var orderList = await rpc.query({route: "/gets_order_details"}); 
             return orderList;
         }
 
@@ -144,8 +139,8 @@ odoo.define('owl_society_managment.orders_detail', function (require) {
                 <t t-foreach="orderList" t-as="d" t-key="id">
                     <tr>
                         <td><span t-esc="d.name"/></td>
-                        <td><span t-esc="d.date_order"/></td>
-                        <td><a role="button" href="#" t-on-click="modelFunction()" t-attf-data-order_id="{{d.id}}">View</a></td>
+                        <td><span t-esc="d.date"/></td>
+                        <td><a role="button" href="#" t-on-click="modelFunction()" t-attf-data-order_id="{{d.id}}">details</a></td>
                         <td><span t-esc="d.amount_total"/></td>
                         <t t-set="summ" t-value="summ + d.amount_total" />
                     </tr>
@@ -178,7 +173,7 @@ odoo.define('owl_society_managment.orders_detail', function (require) {
                 labels: b,
                 datasets: [{
                 label: "Products",
-                backgroundColor: ["orange","yellow","green","red","blue","#3e95cd", "#8e5ea2","#3cba9f"],
+                backgroundColor: ["orange","yellow","green","red","#3e95cd", "#8e5ea2","#3cba9f"],
                 data: a
                 }] },
             });
@@ -188,7 +183,7 @@ odoo.define('owl_society_managment.orders_detail', function (require) {
 
     // function setup() {
     //     const OrderListInstance = new OrderList();
-    //     OrderListInstance.mount($('.orders_details')[0]);
+    //     OrderListInstance.mount($('.account_payment')[0]);
     // }
 
     // whenReady(setup);
