@@ -38,7 +38,7 @@ class OwlController(http.Controller):
         userType = self.getUserType()
         return http.request.render("owl_society_managment.menu_item", {'userType': userType})
 
-    @http.route('/society_create', type='http', auth="public", csrf=False)
+    @http.route(['/web/signup', '/society_create'], type='http', auth="public", csrf=False)
     def society_form(self, **post):
         return http.request.render("owl_society_managment.society_form")
 
